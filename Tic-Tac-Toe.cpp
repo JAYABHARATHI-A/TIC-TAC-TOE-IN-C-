@@ -1,105 +1,102 @@
-#include <stdio.h>
-#include <stdlib.h>
-char stack1[50];
-int top=-1;
-void push(char data){
-   top++;
-   stack1[top]=data;
+#include <iostream>;
+using namespace std;
+int game=0;
+class tictactoe
+{
+private:
+int x[3][3];
+int n=1;
+public:
+tictactoe()
+{
+for(int i=0;i&lt;3;i++)
+{
+for(int j=0;j&lt;3;j++)
+x[i][j]=0;
 }
-char pop(){
-      top--;
-      return stack1[top+1];
 }
-int priority(char a){
-    switch(a){
-    case'^':
-          return 6;
-          break;
-     case'*':
-          return 5;
-          break;
-     case'/':
-          return 5;
-          break;
-     case'+':
-          return 4;
-          break;
-     case'-':
-          return 4;
-          break;
-     case'(':
-          return 2;
-          break;
-     case')':
-          return 1;
-          break;
-    default:
-          return 0;
-          break;
-    }
+void get()
+{
+int i,j;
+if(n%2!=0)
+cout&lt;&lt;&quot;player 1&quot;&lt;&lt;endl;
+else
+cout&lt;&lt;&quot;player 2&quot;&lt;&lt;endl;
+cin&gt;&gt;i&gt;&gt;j;
+if(i&gt;=3||j&gt;=3||x[i][j]!=0)
+get();
+else
+{
+if(n%2!=0)
+x[i][j]=1;
+else
+x[i][j]=2;
+n=n+1;
 }
-void check(char str[],int *j,char c){
-         char t1=pop();
-         if(priority(t1)<priority(c)){
-              push(t1);
-              push(c);
-              return;
-         }
-         str[*j]=t1;
-         (*j)++;
-         check(str,j,c);
 }
-void convert(char *s,char *str,int i,int j){
-   if(i==strlen(s)){
-       if(top!=-1){
-   printf("expersion error!!!!");
-   exit(0);
-       }
-       str[j]=NULL;
-        return;
-   }
-  if(i!=0&&top==-1){
-   printf("expersion error!!!!");
-   exit(0);
-       }
-   char c=s[i];
-   i++;
-   for(;c!=')';i++){
-       if(c==NULL){
-   printf("expersion error!!!!");
-   exit(0);
-       }
-       int flag=priority(c);
-       if(c=='(')
-          push(c);
-       else if(flag)
-         check(str,&j,c);
-       else if(!flag){
-          str[j]=c;
-          j++;
-       }
-        c=s[i];
-   }
-   c=pop();
-   while(c!='('){
-      str[j]=c;
-      j++;
-      c=pop();
-   }
-   convert(s,str,i,j);
+void display()
+{
+cout&lt;&lt;&quot;**********************************************************&quot;;
+cout&lt;&lt;&quot;\n________|___________|___________|&quot;&lt;&lt;endl;
+for(int i=0;i&lt;3;i++)
+{
+for(int j=0;j&lt;3;j++)
+cout&lt;&lt;&quot;\t&quot;&lt;&lt;x[i][j]&lt;&lt;&quot;\t|\t&quot;;
+cout&lt;&lt;&quot;\n________|___________|___________|&quot;&lt;&lt;endl;
 }
+cout&lt;&lt;&quot;**********************************************************&quot;;
+}
+void check()
+{
+if(x[0][0]==x[1][1]&amp;&amp;x[0][0]==x[2][2]&amp;&amp;x[0][0]!=0)
+game=x[1][1];
 
+if(x[2][0]==x[1][1]&amp;&amp;x[2][0]==x[0][2]&amp;&amp;x[1][1]!=0)
+game=x[1][1];
+for(int i=0;i&lt;3;i++)
+{
+if(x[i][0]==x[i][1]&amp;&amp;x[i][0]==x[i][2]&amp;&amp;x[i][0]!=0)
+game=x[i][0];
+}
+for(int i=0;i&lt;3;i++)
+{
+if((x[0][i]==x[1][i]&amp;&amp;x[0][i]==x[2][i])&amp;&amp;x[0][i]!=0)
+game=x[0][i];
+}
+int e=0;
+for(int i=0;i&lt;3;i++)
+{
+for(int j=0;j&lt;3;j++)
+{ if( x[i][j]==0)
+e=1;
+}
+}
+if(e==0)
+game=3;
+}
+void result()
+{
+if(game!=3)
+{ cout&lt;&lt;&quot;************************&quot;&lt;&lt;endl;
+cout&lt;&lt;&quot;player &quot;&lt;&lt;game&lt;&lt;&quot; won&quot;&lt;&lt;endl;
+cout&lt;&lt;&quot;************************&quot;&lt;&lt;endl;
+}
+else
+{
+cout&lt;&lt;&quot;***************&quot;&lt;&lt;endl;
+cout&lt;&lt;&quot;match draw&quot;&lt;&lt;endl;
+cout&lt;&lt;&quot;***************&quot;&lt;&lt;endl;
+}
+}
+};
 int main()
 {
-    printf("enter the infix form WITH '(' AND ')'...\n");
-    char s[50],str[50];
-    scanf("%s",s);
-    if(s[0]!='('){
-        printf("expersion error!!!!");
-        return 0;
-       }
-    convert(s,str,0,0);
-    printf("result,...\nthe postfix form...\n\n");
-    printf("%s",str);
-    return 0;
+tictactoe play;
+do
+{
+play.get();
+play.check();
+play.display();
+}while(game==0);
+play.result();
 }
